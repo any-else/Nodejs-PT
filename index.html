@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h1> Tìm hiểu về phương thức HTTP</h1>
+  <!-- Demo với phương GET -->
+  <h2> Demo lấy dữ liệu thông qua method GET của HTTP</h2>
+  <form action="http://localhost:8080" method="GET">
+    <input type="text" name="q" placeholder="Nhập chuỗi...">
+    <button type="submit"> Tìm kiếm </button>
+  </form>
+  <!-- Demo với phương POST => Tạo form đăng ký tài khoản -->
+  <h2> Demo với phương POST => Tạo form đăng ký tài khoản</h2>
+  <form action="http://localhost:8080/signup" method="POST">
+    <label for="username"> username</label>
+    <input type="text" name="username" id="name"> <br>
+    <label for="email">email</label>
+    <input type="email" name="email" id="email"> <br>
+    <label for="password">password</label>
+    <input type="password" name="password" id="password"> <br>
+
+    <button type="submit"> Đăng ký</button>
+  </form>
+</body>
+
+</html>
