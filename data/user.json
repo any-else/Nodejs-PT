@@ -1,33 +1,17 @@
 [
   {
+    "_id": 1,
     "username": "bui van vu",
     "email": "vu@gmail.com",
-    "password": "hellokity"
-  },
-  {
-    "username": "bui van Van",
-    "email": "vu@gmail.com",
-    "password": "hellokity"
-  },
-  {
-    "_id": "5c8a1dfa2f8fb814b56fa181",
-    "name": "bui van HALALA",
-    "email": "loulou@example.com",
+    "password": "sdadsa",
     "role": "user",
-    "active": true,
-    "photo": "user-2.jpg",
-    "password": "$2a$12$hP1h2pnNp7wgyZNRwPsOTeZuNzWBv7vHmsR3DT/OaPSUBQT.y0S..",
-    "dataUserBody": {
-      "username": "bui van VaVVV",
-      "email": "vu@gmail.com",
-      "password": "hellokity"
-    }
+    "active": true
   },
   {
     "_id": "5c8a1e1a2f8fb814b56fa182",
     "name": "Sophie Louise Hart",
-    "email": "sophie@example.com",
-    "role": "user",
+    "email": "admin@example.com",
+    "role": "admin",
     "active": true,
     "photo": "user-3.jpg",
     "password": "$2a$12$9nFqToiTmjgfFVJiQvjmreLt4k8X4gGYCETGapSZOb2hHa55t0dDq"

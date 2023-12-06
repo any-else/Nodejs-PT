@@ -3,16 +3,18 @@ const express = require("express");
 const app = express();
 const fs = require("node:fs");
 const path = require("node:path");
+const isCheckActive = require("./middlewares/isCheckActive");
+const isCheckExist = require("./middlewares/isCheckExist");
 
 //middleware global
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //router
-app.get("/api/v1/product", (req, res) => {
+app.get("/api/v1/product", isCheckActive, (req, res) => {
   // res.status(200);
   // res.send("ĐâY LÀ PRODUCT");
-
+  // lay dataVu o day => handle no
   res.status(200).json({
     message: "oke",
     data: [
@@ -37,14 +39,14 @@ app.get("/product", (req, res) => {
   res.status(200).send("This is Product Page");
 });
 //get all user
-app.get("/api/v1/users", (req, res) => {
+app.get("/api/v1/users", isCheckExist, (req, res) => {
   const pathUser = path.join(__dirname, "../data/user.json");
   const dataUser = fs.readFileSync(pathUser, "utf-8");
   res.status(200).json(JSON.parse(dataUser));
 });
 
 //get user by id
-app.get("/api/v1/users/:id", (req, res) => {
+app.get("/api/v1/users/:id", isCheckExist, (req, res) => {
   //handle logic
   const userId = req.params.id;
   console.log("userId", userId);
@@ -86,7 +88,7 @@ app.post("/api/v1/users", (req, res) => {
   }
 });
 // update và delete
-app.patch("/api/v1/users/:id", (req, res) => {
+app.patch("/api/v1/users/:id", isCheckExist, (req, res) => {
   const idUser = req.params.id;
   const dataUserBody = req.body;
   const pathUser = path.join(__dirname, "../data/user.json");
@@ -107,6 +109,23 @@ app.patch("/api/v1/users/:id", (req, res) => {
       message: "không tìm thấy user",
     });
   }
+});
+
+//delete
+app.delete("/api/v1/users/:id", isCheckExist, (req, res) => {
+  //lay id cua user phia ben client
+  const idUser = req.params.id;
+  //doc data
+  const pathUser = path.join(__dirname, "../data/user.json");
+  const dataJsonUser = fs.readFileSync(pathUser, "utf-8");
+  const listUser = JSON.parse(dataJsonUser);
+  // filter hoac find hoac findIndex, reducer, for
+  const newListUser = listUser.filter((user) => user._id != idUser);
+  console.log("aaa");
+  fs.writeFileSync(pathUser, JSON.stringify(newListUser));
+  res.status(200).json({
+    message: "ban da xoa thanh cong",
+  });
 });
 
 // PAGE NOT FOUND
