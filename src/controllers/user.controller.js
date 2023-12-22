@@ -1,101 +1,103 @@
 const connection = require("../configs/config.mysql");
-const getAll = (req, res) => {
-  connection.query("SELECT * FROM users", (error, result) => {
-    if (error) {
-      throw new Error(error);
-    }
-    res.status(200).json(result);
-  });
+const userService = require("../services/user.service");
+const getAll = async (req, res) => {
+  try {
+    const listUser = await userService.getAllService();
+    res.status(200).json({
+      message: "lấy thành công",
+      data: listUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Truy vấn lỗi",
+      error: error,
+    });
+  }
 };
 
-const getOne = (req, res) => {
-  const { id } = req.params;
-  connection.query(
-    "SELECT * FROM users WHERE user_id = ?",
-    id,
-    (error, result) => {
-      if (error) {
-        console.log("có lỗi rồi", error);
-        res.status(400).json({
-          message: "BAD_REQUEST",
-        });
-      }
-      res.status(200).json({
-        message: "lấy thành công",
-        data: result[0],
+const getOne = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userService.getOneService(id);
+    if (!user[0]) {
+      res.status(400).json({
+        message: "BAD_REQUEST",
       });
     }
-  );
+    res.status(200).json({
+      message: "thành công",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi database rồi",
+      error: error,
+    });
+  }
 };
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
   const { user_name, email, pass_word } = req.body;
-  //c1: ko đưa ra các cột => mặc định là bạn phải truyền 100% các cột theo dúng thứ tự trong bảng
-  // connection.query(
-  //   "INSERT INTO users SET ?",
-  //   { user_name, email, pass_word },
-  //   (error, result) => {
-  //     if (error) {
-  //       throw new Error(error);
-  //     }
-  //     res.status(200).json({
-  //       message: "User created successfully",
-  //     });
-  //   }
-  // );
-  // c2: thêm mới nhưng có khai báo ra các trường dữ liệu trong bảng
-  connection.query(
-    "INSERT INTO users (user_name, email, pass_word) VALUES (?, ?, ?)",
-    [user_name, email, pass_word],
-    (error, result) => {
-      if (error) {
-        throw new Error(error);
-      }
-      res.status(200).json({
-        message: "User created successfully",
-      });
-    }
-  );
+
+  try {
+    const newUser = {
+      user_name,
+      email,
+      pass_word,
+    };
+    await userService.createUserService(newUser);
+    res.status(200).json({
+      message: "Thêm mới thành công",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi server",
+      error: error,
+    });
+  }
 };
 
-const editUser = (req, res) => {
+const editUser = async (req, res) => {
   const { id } = req.params;
   const { user_name, email, pass_word } = req.body;
-  connection.query(
-    "UPDATE users SET ? WHERE user_id = ?",
-    [{ user_name, email, pass_word }, id],
-    (error, result) => {
-      if (error) {
-        console.log("có lỗi rồi", error);
-        res.status(400).json({
-          message: "BAD_REQUEST",
-        });
-      }
-      res.status(203).json({
-        message: "Update thành công",
-      });
-    }
-  );
+  const newUserUpdate = {
+    user_name,
+    email,
+    pass_word,
+  };
+  /**
+   * mình có id => đi tìm kiếm nó ra user => (có tất cả filed)
+   *  nếu như mà các dữ liệu của body có data thì cập nhật lại
+   *  không thì giữ nguyên các trường còn lại
+   *
+   * => tạo ra update mới ném editUserService
+   */
+  try {
+    const editUser = await userService.editUserService(id, newUserUpdate);
+    res.status(200).json({
+      message: "cập nhật thành công",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi server",
+      error: error,
+    });
+  }
 };
 
-const removeUser = (req, res) => {
+const removeUser = async (req, res) => {
   const { id } = req.params;
-  //đi tìm xem có không
-  //có mới xoá
-  connection.query(
-    "DELETE FROM users WHERE user_id = ?",
-    id,
-    (error, result) => {
-      if (error) {
-        res.status(400).json({
-          message: "BAD_REQUEST",
-        });
-      }
-      res.status(200).json({
-        message: "Delete thanh cong",
-      });
-    }
-  );
+  try {
+    await userService.deleteUserService(id);
+    res.status(200).json({
+      message: "xoá thành công",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Lỗi server",
+      error: error,
+    });
+  }
 };
 //export
 module.exports = {

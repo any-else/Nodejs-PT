@@ -1,11 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const rootRoute = require("./routers/index.router");
+const cors = require("cors");
 const app = express();
 
 //Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // có hoặc không có cũng được
+//chia sẻ tài nguyên giữa react và express
+app.use(cors());
 //database
 // Router
 rootRoute(app);

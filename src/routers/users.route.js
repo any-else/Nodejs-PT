@@ -10,6 +10,7 @@ const endPointUser = "/api/v1/user";
 const userRoute = (app) => {
   // lấy tất cả
   app.get(endPointUser, getAll);
+
   // lấy một
   app.get(`${endPointUser}/:id`, getOne);
   // thêm mới
