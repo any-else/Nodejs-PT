@@ -1,5 +1,10 @@
 import React from "react";
+import TodoForm from "../../components/todoForm/TodoForm";
 
 export const Todo = () => {
-  return <div>Todo</div>;
+  return (
+    <div>
+      <TodoForm />
+    </div>
+  );
 };
