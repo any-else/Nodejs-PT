@@ -20,11 +20,12 @@ const UserController = {
   createUser: async (req, res) => {
     try {
       // handle lấy thông từ người dùng
-      const { user_name, email, password } = req.body;
+      const { username, email, password } = req.body;
       //gọi tới service
-      await UserService.createUserService(user_name, email, password);
+      await UserService.createUserService(username, email, password);
       res.status(201).json({
-        message: "tạo mới thành công",
+        message: "thành công tạo mới",
+        status: "oke",
       });
     } catch (error) {
       res.status(500).json({
@@ -37,13 +38,17 @@ const UserController = {
     // check xem user có tồn tại trong database hay không ? => có ok =>ko có tài khoản
     try {
       const { email, password } = req.body;
+      //tìm user theo email
       const user = await UserService.findUserByEmail(email);
-      if (!user) {
-        res.status(400).json({
-          message: "Không tìm tài khoản của bạn",
+      //so sánh mật khẩu
+      const isCheckPassword = user.pass_word == password;
+
+      if (!user || !isCheckPassword) {
+        return res.status(400).json({
+          message: "Thông tin tài khoản mật khẩu không chính xác",
         });
       }
-      res.status(200).json({
+      return res.status(200).cookie("users", JSON.stringify(user)).json({
         message: "login thành công",
         user: user,
       });
